@@ -37,6 +37,13 @@ class addDiaryFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_add_diary, container, false)
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        view.findViewById<com.google.android.material.appbar.MaterialToolbar>(R.id.toolbar_add_diary).setNavigationOnClickListener {
+            requireActivity().onBackPressedDispatcher.onBackPressed()
+        }
+    }
+
     companion object {
         /**
          * Use this factory method to create a new instance of
