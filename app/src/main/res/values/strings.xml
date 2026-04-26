@@ -6,4 +6,21 @@
     // Bottom App Bar Layout
     <string name="appbar_home">Home</string>
     <string name="appbar_stats">Stats</string>
+
+    // Add Film Strings
+    <string name="add_film_title">Add Film</string>
+    <string name="tap_to_upload_poster">Tap to upload poster</string>
+    <string name="movie_title_hint">Movie Title</string>
+    <string name="year_hint">Year</string>
+    <string name="director_hint">Director</string>
+    <string name="description_hint">Description</string>
+    <string name="genre_label">Genre</string>
+    <string name="action_genre">Action</string>
+    <string name="comedy_genre">Comedy</string>
+    <string name="drama_genre">Drama</string>
+    <string name="horror_genre">Horror</string>
+    <string name="scifi_genre">Sci-Fi</string>
+    <string name="romance_genre">Romance</string>
+    <string name="thriller_genre">Thriller</string>
+    <string name="save_film_button">Save Film</string>
 </resources>
