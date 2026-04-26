@@ -40,13 +40,16 @@ android {
 
 dependencies {
     implementation(libs.appcompat)
+    implementation(libs.cardview)
     implementation(libs.coordinatorlayout)
     implementation(libs.fragment)
+    implementation(libs.legacy.support.v4)
     implementation(libs.material)
     implementation(libs.activity)
     implementation(libs.constraintlayout)
     implementation(libs.navigation.fragment.ktx)
     implementation(libs.navigation.ui.ktx)
+    implementation(libs.recyclerview)
     implementation(libs.viewpager2)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)

@@ -61,4 +61,12 @@ public class DiaryFragment extends Fragment {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_diary, container, false);
     }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        view.findViewById(R.id.fab_add_diary).setOnClickListener(v -> {
+            androidx.navigation.Navigation.findNavController(v).navigate(R.id.action_mainFragment_to_addDiaryFragment);
+        });
+    }
 }

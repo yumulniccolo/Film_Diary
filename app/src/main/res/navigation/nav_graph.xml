@@ -9,7 +9,20 @@
         android:id="@+id/mainFragment"
         android:name="com.example.finalexer3grp2.MainFragment"
         android:label="fragment_main"
-        tools:layout="@layout/fragment_main" />
+        tools:layout="@layout/fragment_main" >
+        <action
+            android:id="@+id/action_mainFragment_to_statsFragment"
+            app:destination="@id/statsFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_addFilmFragment"
+            app:destination="@id/addFilmFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_addDiaryFragment"
+            app:destination="@id/addDiaryFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_addListFragment"
+            app:destination="@id/addListFragment" />
+    </fragment>
     <fragment
         android:id="@+id/filmsFragment"
         android:name="com.example.finalexer3grp2.FilmsFragment"
@@ -25,4 +38,24 @@
         android:name="com.example.finalexer3grp2.ListsFragment"
         android:label="fragment_lists"
         tools:layout="@layout/fragment_lists" />
+    <fragment
+        android:id="@+id/statsFragment"
+        android:name="com.example.finalexer3grp2.StatsFragment"
+        android:label="fragment_stats"
+        tools:layout="@layout/fragment_stats" />
+    <fragment
+        android:id="@+id/addFilmFragment"
+        android:name="com.example.finalexer3grp2.AddFilmFragment"
+        android:label="fragment_add_film"
+        tools:layout="@layout/fragment_add_film" />
+    <fragment
+        android:id="@+id/addDiaryFragment"
+        android:name="com.example.finalexer3grp2.addDiaryFragment"
+        android:label="fragment_add_diary"
+        tools:layout="@layout/fragment_add_diary" />
+    <fragment
+        android:id="@+id/addListFragment"
+        android:name="com.example.finalexer3grp2.addListFragment"
+        android:label="fragment_add_list"
+        tools:layout="@layout/fragment_add_list" />
 </navigation>

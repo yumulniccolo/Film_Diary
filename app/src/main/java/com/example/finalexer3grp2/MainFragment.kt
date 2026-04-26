@@ -5,8 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
-import androidx.navigation.ui.setupWithNavController
 import com.example.finalexer3grp2.databinding.FragmentMainBinding
 import com.google.android.material.tabs.TabLayoutMediator
 
@@ -38,8 +36,5 @@ class MainFragment : Fragment(R.layout.fragment_main) {
                 else -> null
             }
         }.attach()
-
-        val navController = findNavController()
-        binding.bottomNavigation.setupWithNavController(navController)
     }
 }

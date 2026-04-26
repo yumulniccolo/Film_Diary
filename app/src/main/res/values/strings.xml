@@ -3,12 +3,7 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
-    // Tab Layout
-    <string name="film_tab">Film</string>
-    <string name="diary_tab">Diary</string>
-    <string name="list_tab">List</string>
-
     // Bottom App Bar Layout
     <string name="appbar_home">Home</string>
-    <string name="appbar_profile">Profile</string>
+    <string name="appbar_stats">Stats</string>
 </resources>
