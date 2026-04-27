@@ -27,9 +27,10 @@ class FilmsFragment : Fragment() {
 
         val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerViewFilms)
         adapter = FilmAdapter(emptyList()) { film ->
-            // This is the callback triggered by the long-press "Edit" option
-            // When we create the EditFilmFragment, we will navigate here
-            android.widget.Toast.makeText(requireContext(), "Edit: ${film.title}", android.widget.Toast.LENGTH_SHORT).show()
+            val bundle = Bundle().apply {
+                putInt("filmId", film.id)
+            }
+            findNavController().navigate(R.id.editFilmFragment, bundle)
         }
         recyclerView.adapter = adapter
 

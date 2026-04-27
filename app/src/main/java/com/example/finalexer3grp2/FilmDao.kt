@@ -21,4 +21,7 @@ interface FilmDao {
 
     @Update
     suspend fun updateFilm(film: Film)
+
+    @Query("SELECT * FROM films_table WHERE id = :id")
+    suspend fun getFilmById(id: Int): Film?
 }
