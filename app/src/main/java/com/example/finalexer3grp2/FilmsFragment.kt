@@ -26,7 +26,11 @@ class FilmsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerViewFilms)
-        adapter = FilmAdapter(emptyList())
+        adapter = FilmAdapter(emptyList()) { film ->
+            // This is the callback triggered by the long-press "Edit" option
+            // When we create the EditFilmFragment, we will navigate here
+            android.widget.Toast.makeText(requireContext(), "Edit: ${film.title}", android.widget.Toast.LENGTH_SHORT).show()
+        }
         recyclerView.adapter = adapter
 
         view.findViewById<FloatingActionButton>(R.id.fab_add_film).setOnClickListener {
