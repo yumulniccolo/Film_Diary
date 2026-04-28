@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import coil.load
 import com.example.finalexer3grp2.databinding.FragmentFilmDetailsBinding
 import kotlinx.coroutines.launch
@@ -14,30 +15,36 @@ class FilmDetailsFragment : Fragment(R.layout.fragment_film_details) {
     private val binding get() = _binding!!
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
         _binding = FragmentFilmDetailsBinding.bind(view)
 
         val filmId = arguments?.getInt("filmId") ?: return
 
-        binding.toolbarDetail.setNavigationOnClickListener {
-            requireActivity().onBackPressedDispatcher.onBackPressed()
+        val db = FilmDatabase.getDatabase(requireContext())
+
+        lifecycleScope.launch {
+            val film = db.filmDao().getFilmById(filmId)
+
+            film?.let {
+                binding.ivPoster.load(it.posterUri)
+                binding.tvTitle.text = it.title
+                binding.tvYear.text = it.year
+                binding.tvDirector.text = it.director
+                binding.tvGenres.text = it.genres
+                binding.tvDescription.text = it.description
+            }
         }
 
-        loadFilm(filmId)
-    }
+        binding.toolbarDetail.setNavigationOnClickListener {
+            findNavController().popBackStack()
+        }
 
-    private fun loadFilm(id: Int) {
-        lifecycleScope.launch {
-            val db = FilmDatabase.getDatabase(requireContext())
-            val film = db.filmDao().getFilmById(id)
-
-            if (film != null) {
-                binding.ivPoster.load(film.posterUri)
-                binding.tvTitle.text = film.title
-                binding.tvYear.text = "Year: ${film.year}"
-                binding.tvDirector.text = "Director: ${film.director}"
-                binding.tvGenres.text = film.genres
-                binding.tvDescription.text = film.description
+        // edit button
+        binding.fabEdit.setOnClickListener {
+            val bundle = Bundle().apply {
+                putInt("filmId", filmId)
             }
+            findNavController().navigate(R.id.editFilmFragment, bundle)
         }
     }
 

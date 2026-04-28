@@ -5,26 +5,17 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.PopupMenu
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 
 class FilmAdapter(
     private var films: List<Film>,
     private val onItemClick: (Film) -> Unit,
-    private val onEditClick: (Film) -> Unit,
-    private val onSelectionChanged: (Int) -> Unit = {}
+    private val onSelectionChanged: (Int) -> Unit
 ) : RecyclerView.Adapter<FilmAdapter.FilmViewHolder>() {
 
     val selectedIds = mutableSetOf<Int>()
     var isSelectionMode = false
-
-    fun clearSelection() {
-        selectedIds.clear()
-        isSelectionMode = false
-        notifyDataSetChanged()
-        onSelectionChanged(0)
-    }
 
     class FilmViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val title: TextView = view.findViewById(R.id.itemTitle)
@@ -44,50 +35,48 @@ class FilmAdapter(
         val isSelected = selectedIds.contains(film.id)
 
         holder.title.text = film.title
-        holder.info.text = "${film.year} • Dir. ${film.director}"
+        holder.info.text = "${film.year} • ${film.director}"
 
-        holder.poster.load(film.posterUri) {
-            crossfade(true)
-            placeholder(R.drawable.ic_launcher_background)
-            error(R.drawable.ic_launcher_background)
+        holder.poster.load(film.posterUri)
+
+        //color when selected
+        if (isSelected) {
+
+            holder.itemView.foreground = android.graphics.drawable.ColorDrawable(
+                android.graphics.Color.parseColor("#803F51B5")
+            )
+
+            holder.itemView.alpha = 1f
+
+        } else {
+
+            holder.itemView.foreground = null
+
+            holder.itemView.alpha = if (isSelectionMode) 0.6f else 1f
         }
 
-        holder.itemView.alpha = if (isSelectionMode && !isSelected) 0.5f else 1.0f
-        holder.itemView.isActivated = isSelected
 
-        // one click - details
         holder.itemView.setOnClickListener {
 
             if (isSelectionMode) {
+
                 toggleSelection(film.id)
                 notifyItemChanged(position)
-                onSelectionChanged(selectedIds.size)
+
             } else {
                 onItemClick(film)
             }
         }
 
-        // long press - edit and delete
+        //long press - start of selection
         holder.itemView.setOnLongClickListener {
 
             if (!isSelectionMode) {
                 isSelectionMode = true
                 selectedIds.add(film.id)
-                notifyDataSetChanged()
+                notifyItemChanged(position)
                 onSelectionChanged(selectedIds.size)
             }
-
-            val popup = PopupMenu(holder.itemView.context, holder.itemView)
-            popup.menu.add("Edit")
-
-            popup.setOnMenuItemClickListener { item ->
-                if (item.title == "Edit") {
-                    onEditClick(film)
-                }
-                true
-            }
-
-            popup.show()
 
             true
         }
@@ -96,25 +85,25 @@ class FilmAdapter(
     override fun getItemCount() = films.size
 
     fun updateData(newFilms: List<Film>) {
-        this.films = newFilms
+        films = newFilms
         notifyDataSetChanged()
     }
 
-    fun toggleSelection(filmId: Int) {
-        if (selectedIds.contains(filmId)) {
-            selectedIds.remove(filmId)
-        } else {
-            selectedIds.add(filmId)
-        }
+    fun toggleSelection(id: Int) {
+        if (selectedIds.contains(id)) selectedIds.remove(id)
+        else selectedIds.add(id)
 
-        if (selectedIds.isEmpty()) {
-            isSelectionMode = false
-        }
+        if (selectedIds.isEmpty()) isSelectionMode = false
 
         onSelectionChanged(selectedIds.size)
     }
 
-    fun getFilmAt(position: Int): Film? {
-        return films.getOrNull(position)
+    fun clearSelection() {
+        selectedIds.clear()
+        isSelectionMode = false
+        notifyDataSetChanged()
+        onSelectionChanged(0)
     }
+
+    fun getFilmAt(position: Int) = films[position]
 }
