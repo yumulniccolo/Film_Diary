@@ -94,4 +94,18 @@ class FilmAdapter(
         this.films = newFilms
         notifyDataSetChanged()
     }
+
+    fun toggleSelection(filmId: Int) {
+        if (selectedIds.contains(filmId)) {
+            selectedIds.remove(filmId)
+        } else {
+            selectedIds.add(filmId)
+        }
+        if (selectedIds.isEmpty()) isSelectionMode = false
+        onSelectionChanged(selectedIds.size)
+    }
+
+    fun getFilmAt(position: Int): Film? {
+        return films.getOrNull(position)
+    }
 }
