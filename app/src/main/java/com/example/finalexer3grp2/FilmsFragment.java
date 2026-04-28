@@ -2,6 +2,9 @@ package com.example.finalexer3grp2;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -24,6 +27,11 @@ public class FilmsFragment extends Fragment {
     private FilmAdapter adapter;
 
     @Nullable
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_films, container, false);
@@ -97,6 +105,35 @@ public class FilmsFragment extends Fragment {
                 }
             }
         });
+
+        requireActivity().addMenuProvider(new androidx.core.view.MenuProvider() {
+
+            @Override
+            public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+                inflater.inflate(R.menu.menu_sort, menu);
+            }
+
+            @Override
+            public boolean onMenuItemSelected(@NonNull MenuItem item) {
+
+                FilmDao dao = FilmDatabase.getDatabase(requireContext()).filmDao();
+
+                if (item.getItemId() == R.id.sort_az) {
+                    dao.getFilmsAZ().observe(getViewLifecycleOwner(), films -> adapter.updateData(films));
+                    return true;
+
+                } else if (item.getItemId() == R.id.sort_recent) {
+                    dao.getRecentlyModified().observe(getViewLifecycleOwner(), films -> adapter.updateData(films));
+                    return true;
+
+                } else if (item.getItemId() == R.id.sort_latest) {
+                    dao.getLatestToOldest().observe(getViewLifecycleOwner(), films -> adapter.updateData(films));
+                    return true;
+                }
+
+                return false;
+            }
+        }, getViewLifecycleOwner());
 
         FilmDatabase.getDatabase(requireContext()).filmDao().getAllFilms().observe(getViewLifecycleOwner(), films -> {
             adapter.updateData(films);

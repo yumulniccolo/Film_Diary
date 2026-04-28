@@ -15,8 +15,17 @@ public interface FilmDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertFilm(Film film);
 
-    @Query("SELECT * FROM films_table ORDER BY title ASC")
+    @Query("SELECT * FROM films_table ORDER BY createdAt DESC")
     LiveData<List<Film>> getAllFilms();
+
+    @Query("SELECT * FROM films_table ORDER BY title ASC")
+    LiveData<List<Film>> getFilmsAZ();
+
+    @Query("SELECT * FROM films_table ORDER BY updatedAt DESC")
+    LiveData<List<Film>> getRecentlyModified();
+
+    @Query("SELECT * FROM films_table ORDER BY createdAt DESC")
+    LiveData<List<Film>> getLatestToOldest();
 
     @Delete
     void deleteFilm(Film film);

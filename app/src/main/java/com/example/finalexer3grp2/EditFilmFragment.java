@@ -119,6 +119,8 @@ public class EditFilmFragment extends Fragment {
             currentFilm.setGenres(selectedGenres.isEmpty() ? "Uncategorized" : String.join(", ", selectedGenres));
             currentFilm.setPosterUri(selectedImageUri != null ? selectedImageUri.toString() : null);
 
+            currentFilm.setUpdatedAt(System.currentTimeMillis());
+
             FilmDatabase.databaseWriteExecutor.execute(() -> {
                 FilmDatabase.getDatabase(requireContext()).filmDao().updateFilm(currentFilm);
                 if (getActivity() != null) {

@@ -17,6 +17,9 @@ import java.util.Set;
 
 import coil.Coil;
 import coil.request.ImageRequest;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 public class FilmAdapter extends RecyclerView.Adapter<FilmAdapter.FilmViewHolder> {
 
@@ -100,11 +103,16 @@ public class FilmAdapter extends RecyclerView.Adapter<FilmAdapter.FilmViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull FilmViewHolder holder, int position) {
+
         Film film = films.get(position);
         boolean isSelected = selectedIds.contains(film.getId());
 
+        SimpleDateFormat sdf = new SimpleDateFormat("MMMM dd yyyy", Locale.getDefault());
+
+        String updatedDate = sdf.format(new Date(film.getUpdatedAt()));
+
         holder.title.setText(film.getTitle());
-        holder.info.setText(film.getYear() + " • " + film.getDirector());
+        holder.info.setText(film.getYear() + " • " + film.getDirector() + "\nUpdated: " + updatedDate);
 
         // Coil Java usage
         ImageRequest request = new ImageRequest.Builder(holder.poster.getContext())

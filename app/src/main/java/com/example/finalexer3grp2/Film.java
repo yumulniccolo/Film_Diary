@@ -2,6 +2,7 @@ package com.example.finalexer3grp2;
 
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
+import androidx.room.Ignore;
 
 @Entity(tableName = "films_table")
 public class Film {
@@ -13,7 +14,10 @@ public class Film {
     private String genres;
     private String description;
     private String posterUri;
+    private long createdAt;
+    private long updatedAt;
 
+    @Ignore
     public Film(int id, String title, String year, String director, String genres, String description, String posterUri) {
         this.id = id;
         this.title = title;
@@ -47,4 +51,10 @@ public class Film {
 
     public String getPosterUri() { return posterUri; }
     public void setPosterUri(String posterUri) { this.posterUri = posterUri; }
+    public long getCreatedAt() { return createdAt; }
+    public void setCreatedAt(long createdAt) { this.createdAt = createdAt; }
+
+    public long getUpdatedAt() { return updatedAt; }
+    public void setUpdatedAt(long updatedAt) { this.updatedAt = updatedAt; }
 }
+

@@ -15,6 +15,10 @@ import com.example.finalexer3grp2.databinding.FragmentFilmDetailsBinding;
 import coil.Coil;
 import coil.request.ImageRequest;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 public class FilmDetailsFragment extends Fragment {
 
     private FragmentFilmDetailsBinding binding;
@@ -59,6 +63,13 @@ public class FilmDetailsFragment extends Fragment {
                             .build();
                     Coil.imageLoader(requireContext()).enqueue(request);
 
+                    SimpleDateFormat sdf = new SimpleDateFormat("MMMM dd yyyy", Locale.getDefault());
+
+                    String createdDate = sdf.format(new Date(film.getCreatedAt()));
+                    String updatedDate = sdf.format(new Date(film.getUpdatedAt()));
+
+                    binding.tvCreated.setText("Created: " + createdDate);
+                    binding.tvUpdated.setText("Updated: " + updatedDate);
                     binding.tvTitle.setText(film.getTitle());
                     binding.tvYear.setText(film.getYear());
                     binding.tvDirector.setText(film.getDirector());

@@ -59,7 +59,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"/>
-
+            <TextView
+                android:id="@+id/tvCreated"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Created:"
+                android:textSize="14sp"/>
+            <TextView
+                android:id="@+id/tvUpdated"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Updated:"
+                android:textSize="14sp"/>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 

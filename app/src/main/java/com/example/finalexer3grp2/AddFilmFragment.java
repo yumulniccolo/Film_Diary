@@ -82,6 +82,10 @@ public class AddFilmFragment extends Fragment {
         film.setGenres(genres.isEmpty() ? "Uncategorized" : genres);
         film.setPosterUri(selectedImageUri != null ? selectedImageUri.toString() : null);
 
+        long currentTime = System.currentTimeMillis();
+        film.setCreatedAt(currentTime);
+        film.setUpdatedAt(currentTime);
+
         FilmDatabase.databaseWriteExecutor.execute(() -> {
             FilmDatabase.getDatabase(requireContext()).filmDao().insertFilm(film);
             if (getActivity() != null) {
