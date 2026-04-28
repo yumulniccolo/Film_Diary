@@ -67,4 +67,13 @@
             android:name="filmId"
             app:argType="integer" />
     </fragment>
+    <fragment
+        android:id="@+id/filmDetailsFragment"
+        android:name="com.example.finalexer3grp2.FilmDetailsFragment"
+        android:label="Film Details">
+
+        <argument
+            android:name="filmId"
+            app:argType="integer"/>
+    </fragment>
 </navigation>

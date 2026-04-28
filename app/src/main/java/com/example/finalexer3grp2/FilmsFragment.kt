@@ -34,8 +34,16 @@ class FilmsFragment : Fragment() {
 
         adapter = FilmAdapter(
             films = emptyList(),
+            onItemClick = { film ->
+                val bundle = Bundle().apply {
+                    putInt("filmId", film.id)
+                }
+                findNavController().navigate(R.id.filmDetailsFragment, bundle)
+            },
             onEditClick = { film ->
-                val bundle = Bundle().apply { putInt("filmId", film.id) }
+                val bundle = Bundle().apply {
+                    putInt("filmId", film.id)
+                }
                 findNavController().navigate(R.id.editFilmFragment, bundle)
             },
             onSelectionChanged = { count ->
@@ -73,7 +81,6 @@ class FilmsFragment : Fragment() {
                                     val film = adapter.getFilmAt(pos)
                                     film?.let {
                                         adapter.toggleSelection(it.id)
-                                        adapter.notifyItemChanged(pos)
                                     }
                                 }
                             }
@@ -91,30 +98,35 @@ class FilmsFragment : Fragment() {
             override fun onRequestDisallowInterceptTouchEvent(disallowIntercept: Boolean) {}
         })
 
-        // --- Existing add button ---
         fabAdd.setOnClickListener {
-            findNavController().navigate(R.id.action_mainFragment_to_addFilmFragment)
+            findNavController().navigate(R.id.addFilmFragment)
         }
 
-        // --- New delete button with confirmation ---
         fabDelete.setOnClickListener {
+            val ids = adapter.selectedIds.toList()
+
+            if (ids.isEmpty()) return@setOnClickListener
+
             AlertDialog.Builder(requireContext())
                 .setTitle("Delete Films")
-                .setMessage("Are you sure you want to delete ${adapter.selectedIds.size} selected film(s)?")
+                .setMessage("Are you sure you want to delete ${ids.size} selected film(s)?")
                 .setPositiveButton("Delete") { _, _ ->
-                    val ids = adapter.selectedIds.toList()
+
                     lifecycleScope.launch {
-                        FilmDatabase.getDatabase(requireContext())
-                            .filmDao()
-                            .deleteByIds(ids)
+                        val db = FilmDatabase.getDatabase(requireContext())
+
+                        db.filmDao().deleteByIds(ids)
+
                         adapter.clearSelection()
+
+                        adapter.notifyDataSetChanged()
                     }
                 }
                 .setNegativeButton("Cancel", null)
                 .show()
         }
 
-        // Back press exits selection mode instead of navigating away
+        // back press
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
             if (adapter.isSelectionMode) {
                 adapter.clearSelection()
@@ -124,7 +136,6 @@ class FilmsFragment : Fragment() {
             }
         }
 
-        // --- Existing DB observer ---
         val database = FilmDatabase.getDatabase(requireContext())
         lifecycleScope.launch {
             database.filmDao().getAllFilms().collect { films ->

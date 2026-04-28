@@ -5,11 +5,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.PopupMenu
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 
 class FilmAdapter(
     private var films: List<Film>,
+    private val onItemClick: (Film) -> Unit,
     private val onEditClick: (Film) -> Unit,
     private val onSelectionChanged: (Int) -> Unit = {}
 ) : RecyclerView.Adapter<FilmAdapter.FilmViewHolder>() {
@@ -31,60 +33,63 @@ class FilmAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FilmViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_film, parent, false)
+        val view = LayoutInflater.from(parent.context)
+            .inflate(R.layout.item_film, parent, false)
         return FilmViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: FilmViewHolder, position: Int) {
+
         val film = films[position]
         val isSelected = selectedIds.contains(film.id)
 
         holder.title.text = film.title
         holder.info.text = "${film.year} • Dir. ${film.director}"
+
         holder.poster.load(film.posterUri) {
             crossfade(true)
             placeholder(R.drawable.ic_launcher_background)
             error(R.drawable.ic_launcher_background)
         }
 
-        // Visual feedback
         holder.itemView.alpha = if (isSelectionMode && !isSelected) 0.5f else 1.0f
-        holder.itemView.isActivated = isSelected // use activated state in your item bg selector
+        holder.itemView.isActivated = isSelected
 
+        // one click - details
+        holder.itemView.setOnClickListener {
+
+            if (isSelectionMode) {
+                toggleSelection(film.id)
+                notifyItemChanged(position)
+                onSelectionChanged(selectedIds.size)
+            } else {
+                onItemClick(film)
+            }
+        }
+
+        // long press - edit and delete
         holder.itemView.setOnLongClickListener {
+
             if (!isSelectionMode) {
-                // Enter selection mode
                 isSelectionMode = true
                 selectedIds.add(film.id)
                 notifyDataSetChanged()
                 onSelectionChanged(selectedIds.size)
-            } else {
-                // Already in selection mode — show popup like before
-                val popup = android.widget.PopupMenu(holder.itemView.context, holder.itemView)
-                popup.menu.add("Edit")
-                popup.setOnMenuItemClickListener { item ->
-                    if (item.title == "Edit") onEditClick(film)
-                    true
-                }
-                popup.show()
             }
-            true
-        }
 
-        holder.itemView.setOnClickListener {
-            if (isSelectionMode) {
-                if (selectedIds.contains(film.id)) {
-                    selectedIds.remove(film.id)
-                } else {
-                    selectedIds.add(film.id)
+            val popup = PopupMenu(holder.itemView.context, holder.itemView)
+            popup.menu.add("Edit")
+
+            popup.setOnMenuItemClickListener { item ->
+                if (item.title == "Edit") {
+                    onEditClick(film)
                 }
-                if (selectedIds.isEmpty()) {
-                    isSelectionMode = false
-                }
-                notifyItemChanged(position)
-                onSelectionChanged(selectedIds.size)
+                true
             }
-            // Normal click does nothing here since edit is via long press popup
+
+            popup.show()
+
+            true
         }
     }
 
@@ -101,7 +106,11 @@ class FilmAdapter(
         } else {
             selectedIds.add(filmId)
         }
-        if (selectedIds.isEmpty()) isSelectionMode = false
+
+        if (selectedIds.isEmpty()) {
+            isSelectionMode = false
+        }
+
         onSelectionChanged(selectedIds.size)
     }
 

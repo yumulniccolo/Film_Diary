@@ -3,12 +3,10 @@ package com.example.finalexer3grp2
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.finalexer3grp2.databinding.FragmentAddFilmBinding
@@ -18,27 +16,27 @@ class AddFilmFragment : Fragment() {
 
     private var _binding: FragmentAddFilmBinding? = null
     private val binding get() = _binding!!
-    
+
     private var selectedImageUri: Uri? = null
 
-    private val pickImage = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
-        uri?.let {
+    private val pickImage =
+        registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+            uri?.let {
+                try {
+                    requireContext().contentResolver.takePersistableUriPermission(
+                        it,
+                        Intent.FLAG_GRANT_READ_URI_PERMISSION
+                    )
+                } catch (_: Exception) {}
 
-            try {
-                val contentResolver = requireContext().contentResolver
-                val takeFlags: Int = Intent.FLAG_GRANT_READ_URI_PERMISSION
-                contentResolver.takePersistableUriPermission(it, takeFlags)
-            } catch (e: Exception) {
-                e.printStackTrace()
+                selectedImageUri = it
+                binding.ivPosterPicker.setImageURI(it)
             }
-
-            selectedImageUri = it
-            binding.ivPosterPicker.setImageURI(it)
         }
-    }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: android.view.LayoutInflater,
+        container: android.view.ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentAddFilmBinding.inflate(inflater, container, false)
@@ -46,50 +44,50 @@ class AddFilmFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        
+
         binding.toolbarAddFilm.setNavigationOnClickListener {
-            requireActivity().onBackPressedDispatcher.onBackPressed()
+            findNavController().popBackStack()
         }
 
         binding.cvPosterPicker.setOnClickListener {
             pickImage.launch("image/*")
         }
-        
+
         binding.btnSaveFilm.setOnClickListener {
-            saveFilmToDatabase()
+            saveFilm()
         }
     }
 
-    private fun saveFilmToDatabase() {
+    private fun saveFilm() {
         val title = binding.etTitle.text.toString()
         val year = binding.etYear.text.toString()
         val director = binding.etDirector.text.toString()
         val description = binding.etDescription.text.toString()
-        
-        val selectedGenres = binding.cgGenres.checkedChipIds.map { id ->
-            binding.root.findViewById<com.google.android.material.chip.Chip>(id)?.text.toString()
-        }.joinToString(", ")
 
-        if (title.isEmpty() || year.isEmpty()) {
-            Toast.makeText(requireContext(), "Please enter title and year", Toast.LENGTH_SHORT).show()
+        if (title.isBlank() || year.isBlank()) {
+            Toast.makeText(requireContext(), "Title and Year required", Toast.LENGTH_SHORT).show()
             return
         }
+
+        val genres = binding.cgGenres.checkedChipIds.map {
+            binding.root.findViewById<com.google.android.material.chip.Chip>(it).text.toString()
+        }.joinToString(", ")
 
         val film = Film(
             title = title,
             year = year,
             director = director,
             description = description,
-            genres = if (selectedGenres.isNotEmpty()) selectedGenres else "Uncategorized",
+            genres = if (genres.isBlank()) "Uncategorized" else genres,
             posterUri = selectedImageUri?.toString()
         )
 
         lifecycleScope.launch {
-            val database = FilmDatabase.getDatabase(requireContext())
-            database.filmDao().insertFilm(film)
+            FilmDatabase.getDatabase(requireContext())
+                .filmDao()
+                .insertFilm(film)
 
-            Toast.makeText(requireContext(), "Film Saved!", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "Saved!", Toast.LENGTH_SHORT).show()
             findNavController().popBackStack()
         }
     }
