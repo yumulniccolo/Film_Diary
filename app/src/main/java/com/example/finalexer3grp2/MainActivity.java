@@ -33,7 +33,8 @@ public class MainActivity extends AppCompatActivity {
                     destination.getId() == R.id.addDiaryFragment ||
                     destination.getId() == R.id.addListFragment ||
                     destination.getId() == R.id.filmDetailsFragment ||
-                    destination.getId() == R.id.editFilmFragment) {
+                    destination.getId() == R.id.editFilmFragment ||
+                    destination.getId() == R.id.searchFragment) {
                     binding.bottomNavigation.setVisibility(View.GONE);
                 } else {
                     binding.bottomNavigation.setVisibility(View.VISIBLE);

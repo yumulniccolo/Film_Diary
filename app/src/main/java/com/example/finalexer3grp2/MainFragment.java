@@ -30,6 +30,11 @@ public class MainFragment extends Fragment {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager(), getViewLifecycleOwner().getLifecycle());
         binding.ViewPager2.setAdapter(adapter);
 
+        // Set up search trigger
+        binding.searchTriggerCard.setOnClickListener(v -> {
+            androidx.navigation.Navigation.findNavController(v).navigate(R.id.searchFragment);
+        });
+
         new TabLayoutMediator(binding.tabLayout, binding.ViewPager2, (tab, position) -> {
             switch (position) {
                 case 0:

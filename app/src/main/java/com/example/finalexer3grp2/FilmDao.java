@@ -27,6 +27,12 @@ public interface FilmDao {
     @Query("SELECT * FROM films_table WHERE id = :id")
     Film getFilmById(int id);
 
+    @Query("SELECT * FROM films_table WHERE title LIKE '%' || :query || '%'")
+    LiveData<List<Film>> searchFilms(String query);
+
+    @Query("SELECT * FROM films_table WHERE director LIKE '%' || :query || '%'")
+    LiveData<List<Film>> searchByDirector(String query);
+
     @Query("DELETE FROM films_table WHERE id IN (:ids)")
     void deleteByIds(List<Integer> ids);
 }
