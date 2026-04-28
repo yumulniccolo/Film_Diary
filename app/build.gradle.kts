@@ -1,6 +1,5 @@
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.ksp)
 }
 
 android {
@@ -51,9 +50,8 @@ dependencies {
     implementation(libs.navigation.fragment.ktx)
     implementation(libs.navigation.ui.ktx)
     implementation(libs.recyclerview)
-    implementation(libs.room3.common.jvm)
-    implementation(libs.room3.runtime)
-    ksp(libs.room3.compiler)
+    implementation(libs.room.runtime)
+    annotationProcessor(libs.room.compiler)
     implementation(libs.coil)
     implementation(libs.viewpager2)
     testImplementation(libs.junit)

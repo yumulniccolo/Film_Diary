@@ -50,12 +50,12 @@
         tools:layout="@layout/fragment_add_film" />
     <fragment
         android:id="@+id/addDiaryFragment"
-        android:name="com.example.finalexer3grp2.addDiaryFragment"
+        android:name="com.example.finalexer3grp2.AddDiaryFragment"
         android:label="fragment_add_diary"
         tools:layout="@layout/fragment_add_diary" />
     <fragment
         android:id="@+id/addListFragment"
-        android:name="com.example.finalexer3grp2.addListFragment"
+        android:name="com.example.finalexer3grp2.AddListFragment"
         android:label="fragment_add_list"
         tools:layout="@layout/fragment_add_list" />
     <fragment

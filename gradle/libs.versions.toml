@@ -15,8 +15,7 @@ fragment = "1.8.9"
 legacySupportV4 = "1.0.0"
 cardview = "1.0.0"
 recyclerview = "1.4.0"
-room3CommonJvm = "3.0.0-alpha03"
-room3Runtime = "3.0.0-alpha03"
+room = "2.6.1"
 coil = "2.7.0"
 ksp = "2.3.2"
 
@@ -36,9 +35,8 @@ fragment = { group = "androidx.fragment", name = "fragment", version.ref = "frag
 legacy-support-v4 = { group = "androidx.legacy", name = "legacy-support-v4", version.ref = "legacySupportV4" }
 cardview = { group = "androidx.cardview", name = "cardview", version.ref = "cardview" }
 recyclerview = { group = "androidx.recyclerview", name = "recyclerview", version.ref = "recyclerview" }
-room3-common-jvm = { group = "androidx.room3", name = "room3-common-jvm", version.ref = "room3CommonJvm" }
-room3-runtime = { group = "androidx.room3", name = "room3-runtime", version.ref = "room3Runtime" }
-room3-compiler = { group = "androidx.room3", name = "room3-compiler", version.ref = "room3Runtime" }
+room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
+room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 coil = { group = "io.coil-kt", name = "coil", version.ref = "coil" }
 
 [plugins]
