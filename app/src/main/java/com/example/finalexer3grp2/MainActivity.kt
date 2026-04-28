@@ -27,9 +27,9 @@ class MainActivity : AppCompatActivity() {
             if (destination.id == R.id.addFilmFragment ||
                 destination.id == R.id.addDiaryFragment ||
                 destination.id == R.id.addListFragment) {
-                binding.coordinatorLayout.visibility = View.GONE
+                binding.bottomNavigation.visibility = View.GONE
             } else {
-                binding.coordinatorLayout.visibility = View.VISIBLE
+                binding.bottomNavigation.visibility = View.VISIBLE
             }
         }
     }
