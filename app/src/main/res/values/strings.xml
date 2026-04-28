@@ -5,7 +5,7 @@
 
     // Bottom App Bar Layout
     <string name="appbar_home">Home</string>
-    <string name="appbar_stats">Stats</string>
+    <string name="appbar_stats">Report</string>
 
     // Add Film Strings
     <string name="add_film_title">Add Film</string>
