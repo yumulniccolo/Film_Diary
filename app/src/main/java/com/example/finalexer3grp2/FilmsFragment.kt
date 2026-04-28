@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -26,19 +27,54 @@ class FilmsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerViewFilms)
-        adapter = FilmAdapter(emptyList()) { film ->
-            val bundle = Bundle().apply {
-                putInt("filmId", film.id)
+        val fabAdd = view.findViewById<FloatingActionButton>(R.id.fab_add_film)
+        val fabDelete = view.findViewById<FloatingActionButton>(R.id.fab_delete_film)
+
+        adapter = FilmAdapter(
+            films = emptyList(),
+            onEditClick = { film ->
+                val bundle = Bundle().apply { putInt("filmId", film.id) }
+                findNavController().navigate(R.id.editFilmFragment, bundle)
+            },
+            onSelectionChanged = { count ->
+                if (count > 0) {
+                    fabAdd.visibility = View.GONE
+                    fabDelete.visibility = View.VISIBLE
+                } else {
+                    fabAdd.visibility = View.VISIBLE
+                    fabDelete.visibility = View.GONE
+                }
             }
-            findNavController().navigate(R.id.editFilmFragment, bundle)
-        }
+        )
         recyclerView.adapter = adapter
 
-        view.findViewById<FloatingActionButton>(R.id.fab_add_film).setOnClickListener {
+        // --- Existing add button ---
+        fabAdd.setOnClickListener {
             findNavController().navigate(R.id.action_mainFragment_to_addFilmFragment)
         }
 
-        // Observe the database
+        // --- New delete button ---
+        fabDelete.setOnClickListener {
+            val ids = adapter.selectedIds.toList()
+            lifecycleScope.launch {
+                FilmDatabase.getDatabase(requireContext())
+                    .filmDao()
+                    .deleteByIds(ids)
+                adapter.clearSelection()
+            }
+        }
+
+        // Back press exits selection mode instead of navigating away
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            if (adapter.isSelectionMode) {
+                adapter.clearSelection()
+            } else {
+                isEnabled = false
+                requireActivity().onBackPressedDispatcher.onBackPressed()
+            }
+        }
+
+        // --- Existing DB observer ---
         val database = FilmDatabase.getDatabase(requireContext())
         lifecycleScope.launch {
             database.filmDao().getAllFilms().collect { films ->

@@ -24,4 +24,7 @@ interface FilmDao {
 
     @Query("SELECT * FROM films_table WHERE id = :id")
     suspend fun getFilmById(id: Int): Film?
+
+    @Query("DELETE FROM films_table WHERE id IN (:ids)")
+    suspend fun deleteByIds(ids: List<Int>)
 }
